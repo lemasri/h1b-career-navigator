@@ -31,8 +31,15 @@ public class NotificationService {
     @Value("${aws.sns.topic-arn}")
     private String topicArn;
 
+    /**
+     * Sends the alert and reports whether delivery succeeded.
+     *
+     * Returns {@code true} only when SNS confirms publish. On any failure
+     * the circuit breaker fallback returns {@code false}, so the caller can
+     * skip marking the alert as sent and let the scheduler retry tomorrow.
+     */
     @CircuitBreaker(name = "sns-service", fallbackMethod = "sendVisaExpiryAlertFallback")
-    public void sendVisaExpiryAlert(Visa visa, int daysRemaining) {
+    public boolean sendVisaExpiryAlert(Visa visa, int daysRemaining) {
         String message = buildAlertMessage(visa, daysRemaining);
 
         PublishRequest request = PublishRequest.builder()
@@ -43,19 +50,20 @@ public class NotificationService {
 
         snsClient.publish(request);
         log.info("SNS alert sent for visa: {} expiring in {} days", visa.getId(), daysRemaining);
+        return true;
     }
 
     /**
-     * Fallback — does NOT mark alert as sent.
+     * Fallback — reports failure so the caller does NOT mark the alert as sent.
      * This ensures the scheduler retries tomorrow.
      * Critical design decision — see ADR-002.
      */
-    public void sendVisaExpiryAlertFallback(Visa visa, int daysRemaining, Exception ex) {
+    public boolean sendVisaExpiryAlertFallback(Visa visa, int daysRemaining, Exception ex) {
         log.error("SNS circuit breaker OPEN — failed to send alert for visa: {}. " +
                   "Alert NOT marked as sent — will retry tomorrow. Error: {}",
                   visa.getId(), ex.getMessage());
-        // Intentionally NOT marking alert as sent
-        // Scheduler will retry on next run
+        // Returning false tells the scheduler to leave the flag unset and retry
+        return false;
     }
 
     private String buildAlertMessage(Visa visa, int daysRemaining) {
