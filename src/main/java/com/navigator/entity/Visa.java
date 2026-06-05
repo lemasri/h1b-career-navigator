@@ -52,14 +52,8 @@ public class Visa {
     private VisaStatus status = VisaStatus.ACTIVE;
 
     // Reminder tracking — ensures we don't spam alerts
-    // Explicit column names: the default naming strategy maps e.g. alert90DaySent
-    // -> alert90day_sent (no underscore around the digit), which would not match
-    // the alert_90_day_sent columns defined in V1__initial_schema.sql.
-    @Column(name = "alert_90_day_sent")
     private Boolean alert90DaySent;
-    @Column(name = "alert_60_day_sent")
     private Boolean alert60DaySent;
-    @Column(name = "alert_30_day_sent")
     private Boolean alert30DaySent;
 
     @Column(columnDefinition = "TEXT")

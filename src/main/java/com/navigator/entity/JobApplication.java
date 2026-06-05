@@ -47,10 +47,6 @@ public class JobApplication {
     private LocalDate nextInterviewDate;
 
     // H1B sponsorship tracking — critical for your situation
-    // Explicit column name: the default naming strategy maps sponsorsH1b ->
-    // sponsorsh1b (no underscore before a capital followed by a digit), which
-    // would not match the sponsors_h1b column defined in V1__initial_schema.sql.
-    @Column(name = "sponsors_h1b")
     private Boolean sponsorsH1b;
 
     private Integer salaryRangeMin;

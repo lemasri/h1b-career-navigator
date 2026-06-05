@@ -1,8 +1,7 @@
 # H1B Career Navigator API
 
-> Built from personal experience navigating H1B/H4 transitions, job searching
-> after a 1.5-year career break, and making financial decisions as an immigrant
-> professional in Washington State.
+> A comprehensive career and immigration management platform for skilled professionals
+> navigating work visa transitions, job searches, and financial planning in the United States.
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-green)
@@ -12,39 +11,55 @@
 
 ---
 
-## Why I Built This
+## Overview
 
-As an H4 visa holder with a valid EAD, I found myself simultaneously managing:
-- H4 EAD expiry deadlines and renewal timelines
-- Job applications at Amazon and Microsoft in Seattle
-- 401k withdrawal decisions with complex tax implications
-- H4 → H1B change of status planning
+Skilled professionals on work visas face a unique set of challenges — managing visa
+deadlines, tracking job applications across multiple companies, navigating employer
+sponsorship requirements, and making informed financial decisions, all at the same time.
 
-No single tool handled all of this. Spreadsheets broke. I built this.
+Existing tools handle these in isolation. This platform brings them together in one
+unified API, purpose-built for the needs of immigrant professionals in the US tech industry.
 
 ---
 
 ## Modules
 
 ### 1. Visa Timeline Tracker
-Track H1B, H4, H4-EAD, OPT deadlines with automated 90/60/30-day SNS alerts.
+Track H1B, H4, H4-EAD, OPT, and Green Card deadlines with automated 90/60/30-day
+SNS alerts. Covers status transitions (H4 → H1B change of status, EAD renewals)
+with document checklists per visa type.
 The alert system is idempotent — duplicate notifications are impossible by design.
 
 ### 2. Job Application Tracker
-Full pipeline tracking from Applied → Offer. Tracks H1B sponsorship status
-per company — critical for visa-dependent job seekers.
+Full pipeline management from Applied → Offer across multiple companies simultaneously.
+Tracks H1B sponsorship eligibility per employer — critical for visa-dependent candidates.
+Supports referral tracking, recruiter contacts, interview scheduling, and salary ranges.
 
-### 3. AI Career Advisor *(Module 3 — in progress)*
-AWS Bedrock-powered skill gap analysis and role recommendations.
-Includes circuit breaker — falls back to rule-based recommendations
-when Bedrock is unavailable. Caches AI responses in Redis for cost control.
+### 3. AI Career Advisor *(in progress)*
+AWS Bedrock-powered skill gap analysis, role recommendations, and career path planning
+tailored to visa status and location. Includes circuit breaker — falls back to
+rule-based recommendations when Bedrock is unavailable.
+Caches AI responses in Redis to optimize cost.
 
-### 4. Financial Calculator
-401k early withdrawal calculator with:
-- Federal tax calculation using 2024 marginal brackets
-- Married filing jointly support (spouse income affects your bracket)
-- Washington State 0% state tax applied automatically
-- NRE/NRO FD comparison for US → India transfers *(coming soon)*
+### 4. Financial Planning Calculator
+Helps professionals make informed financial decisions when facing visa uncertainty:
+
+**Primary use cases:**
+- Salary comparison across states (factoring in state income tax differences)
+- NRE/NRO Fixed Deposit comparison for international savings
+- US-to-home-country transfer cost estimation
+
+**Secondary use case — visa-forced relocation:**
+In situations where visa restrictions require leaving the US, the calculator provides:
+- 401k early withdrawal impact analysis (federal tax + 10% penalty breakdown)
+- Net amount after mandatory 20% withholding
+- Married filing jointly support (spouse income bracket impact)
+- State-specific tax applied automatically (e.g. Washington State = 0%)
+- Side-by-side comparison: early withdrawal vs leaving funds invested
+
+> Note: 401k early withdrawal should always be a last resort. The calculator
+> intentionally surfaces the full cost to help users make an informed decision
+> before choosing this option.
 
 ---
 
@@ -174,13 +189,15 @@ Route 53 → ALB → ECS Fargate (Spring Boot)
 
 ## Future Improvements
 
-- [ ] NRE/NRO FD comparison calculator (US → India transfer planning)
+- [ ] International savings comparison (NRE/NRO FD, home country fixed deposits)
 - [ ] AI interview prep module (company-specific tips via Bedrock)
-- [ ] H1B transfer tracker (portability during job change)
-- [ ] Multi-user household support (track spouse visa separately)
+- [ ] H1B transfer tracker (portability during employer change)
+- [ ] Multi-member household support (track dependent visa holders separately)
 - [ ] Mobile push notifications via AWS Pinpoint
+- [ ] Green Card priority date tracker with USCIS bulletin integration
+- [ ] Remote work visa comparison across countries (Canada, UK, Germany, Australia)
 
 ---
 
-*Built with 9 years of backend engineering experience and the lived reality
-of navigating the US immigration system as a software professional.*
+*Built to solve a real problem — helping skilled professionals focus on their
+careers instead of spreadsheets.*
