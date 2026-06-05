@@ -48,7 +48,7 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: ./mvnw test
+        run: mvn test
         env:
           DATABASE_URL: jdbc:postgresql://localhost:5432/h1b_navigator_test
           DATABASE_USERNAME: postgres
@@ -57,7 +57,7 @@ jobs:
           JWT_SECRET: test-secret-at-least-256-bits-long-for-testing
 
       - name: Build JAR
-        run: ./mvnw package -DskipTests
+        run: mvn package -DskipTests
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
